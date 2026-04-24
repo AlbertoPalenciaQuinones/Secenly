@@ -1,0 +1,14 @@
+[package]
+name = "Secenly"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+rasn = "0.19"
+rusqlite = { version = "0.31", features = ["bundled"] }
+cxx = "1"
+chrono = "0.4"
+
+[build-dependencies]
+cxx-build = "1"
+

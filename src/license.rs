@@ -1,9 +1,7 @@
 use chrono::{DateTime, Utc};
-use rasn::{AsnType, Encode, Decode};
 
-#[derive(AsnType, Encode, Decode, Debug)]
-pub struct License {
-    
+#[derive(Debug, Clone)]
+pub struct License {    
     pub id: [u8; 64],
     pub creation_date: DateTime<Utc>,
     pub expiration_date: DateTime<Utc>,

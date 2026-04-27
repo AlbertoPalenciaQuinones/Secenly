@@ -1,8 +1,11 @@
-use crate::{director::Director, builder::Builder, license_builder::LicenseBuilder};
+use crate::{director::Director, builder::Builder, license_builder::LicenseBuilder, license_asn1::LicenseAsn1};
 
 use std::io::{self, Write};
 use rusqlite::{Connection, Result};
 use chrono::{DateTime, Duration, Utc};
+use std::fs::File;
+use std::path::Path;
+
 
 pub fn connect_db() -> Result<Connection> {
     let conn = Connection::open("secenly.db")?;  
@@ -11,7 +14,16 @@ pub fn connect_db() -> Result<Connection> {
 
 pub fn create_license() -> Result<()> {
     // Variable para almacenar el licenseId generado desde la biblioteca
-    let mut id = [0u8; 64];
+    let id: [u8; 64] = [
+        0xdd, 0xaf, 0x35, 0xa1, 0x93, 0x61, 0x7a, 0xba,
+        0xcc, 0x41, 0x73, 0x49, 0xae, 0x20, 0x41, 0x31,
+        0x12, 0xe6, 0xfa, 0x4e, 0x89, 0xa9, 0x7e, 0xa2,
+        0x0a, 0x9e, 0xee, 0xe6, 0x4b, 0x55, 0xd3, 0x9a,
+        0x21, 0x92, 0x99, 0x2a, 0x27, 0x4f, 0xc1, 0xa8,
+        0x36, 0xba, 0x3c, 0x23, 0xa3, 0xfe, 0xeb, 0xbd,
+        0x45, 0x4d, 0x44, 0x23, 0x64, 0x3c, 0xe8, 0x0e,
+        0x2a, 0x9a, 0xc9, 0x4f, 0xa5, 0x4c, 0xa4, 0x9f,
+    ];
     let notes = String::from("Licencia creada desde CLI");
     
     let duration = loop {
@@ -91,8 +103,25 @@ pub fn create_license() -> Result<()> {
     Director::construct_license(&mut license_builder, id, expiration, heartbeat, notes);
     let license = license_builder.build();
 
-    println!("{:?}", license);
+    let license_asn1 = LicenseAsn1::from(&license);
 
+    let der_bytes = rasn::der::encode(&license_asn1)
+        .expect("Error serializando License DER");
+    
+    write_license_der("licenses/license.der", &der_bytes)
+        .expect("Error escribiendo el archivo de licencia");
+
+
+    println!("{:?}", license);
+    println!("DER bytes: {:02x?}", der_bytes);
+
+    Ok(())
+}
+
+pub fn write_license_der(path: &str, der_bytes: &[u8]) -> std::io::Result<()> {
+    let path = Path::new(path);
+    let mut file = File::create(path)?;
+    file.write_all(der_bytes)?;
     Ok(())
 }
 

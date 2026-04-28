@@ -2,9 +2,13 @@ use crate::{director::Director, builder::Builder, license_builder::LicenseBuilde
 
 use std::io::{self, Write};
 use rusqlite::{Connection, Result};
-use chrono::{DateTime, Duration, Utc};
+use chrono::{DateTime, Duration, Local, Timelike, Utc};
 use std::fs::File;
 use std::path::Path;
+
+// Comandos:
+// openssl asn1parse -inform DER -in licenses/license.der  ->  comprueba formato ASN.1
+// hexdump -C licenses/license.der  ->  muestra el contenido del archivo DER en formato hexadecimal
 
 pub fn connect_db() -> Result<Connection> {
     let conn = Connection::open("secenly.db")?;  
@@ -24,6 +28,9 @@ pub fn create_license() -> Result<()> {
         0x2a, 0x9a, 0xc9, 0x4f, 0xa5, 0x4c, 0xa4, 0x9f,
     ];
     let notes = String::from("Licencia creada desde CLI");
+
+    print!("Fecha local: {}\n", Local::now());
+    print!("Fecha UTC: {}", Utc::now());
     
     let duration = loop {
         println!("Select the duration of the license:\n1) 1 day\n2) 7 days\n3) 1 month\n4) 3 months\n5) 6 months\n6) 1 year"
@@ -60,7 +67,7 @@ pub fn create_license() -> Result<()> {
 
         break duration;
     };
-    let expiration: DateTime<Utc> = Utc::now() + duration;
+    let expiration: DateTime<Utc> = Utc::now().with_nanosecond(0).unwrap() + duration;
     
     let heartbeat = loop {
         println!("Select heartbeat interval:\n1) 15 seconds\n2) 30 seconds\n3) 1 minute\n4) 5 minutes\n5) 15 minutes\n6) 1 hour"

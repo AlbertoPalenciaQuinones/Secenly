@@ -1,5 +1,5 @@
 use crate::builder::Builder;
-use chrono::{Utc, DateTime};
+use chrono::{DateTime, Timelike, Utc};
 pub struct Director;
 
 impl Director {
@@ -13,11 +13,10 @@ impl Director {
         ) {
 
         builder.set_id(id);
-        builder.set_creation_date(Utc::now());
-        builder.set_last_use_date(Utc::now());
+        builder.set_creation_date(Utc::now().with_nanosecond(0).unwrap());
+        builder.set_last_use_date(Utc::now().with_nanosecond(0).unwrap());
         builder.set_expiration_date(expiration_date);
         builder.set_heartbeat_interval(heartbeat_interval);
         builder.set_notes(notes);
     }
-
 }

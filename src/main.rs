@@ -2,6 +2,7 @@ mod license_asn1;
 mod license_manager;
 mod secenly_cli;
 mod security;
+mod sign_data;
 
 mod builder;
 mod director;

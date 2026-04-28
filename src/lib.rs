@@ -5,3 +5,4 @@ pub mod license_manager;
 pub mod builder;
 pub mod director;
 pub mod security;
+pub mod sign_data;

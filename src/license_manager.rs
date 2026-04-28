@@ -1,4 +1,4 @@
-use crate::{director::Director, builder::Builder, license_builder::LicenseBuilder, license_asn1::LicenseAsn1};
+use crate::{director::Director, builder::Builder, license_builder::LicenseBuilder, license_asn1::LicenseAsn1, sign_data::SignedDataService};
 
 use std::io::{self, Write};
 use rusqlite::{Connection, Result};
@@ -113,12 +113,14 @@ pub fn create_license() -> Result<()> {
 
     let der_bytes = rasn::der::encode(&license_asn1)
         .expect("Error serializando License DER");
+
+    println!("{:?}", license);
+    println!("DER bytes: {:02x?}", der_bytes);
     
     write_license_der("licenses/license.der", &der_bytes)
         .expect("Error escribiendo el archivo de licencia");
 
-    println!("{:?}", license);
-    println!("DER bytes: {:02x?}", der_bytes);
+    let signed_data = SignedDataService::signed_data(der_bytes);
 
     Ok(())
 }

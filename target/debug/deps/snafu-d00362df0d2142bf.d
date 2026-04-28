@@ -1,0 +1,12 @@
+/home/extapalencia/Secenly/target/debug/deps/snafu-d00362df0d2142bf.d: /home/extapalencia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/snafu-0.7.5/src/lib.rs /home/extapalencia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/snafu-0.7.5/src/backtrace_shim.rs /home/extapalencia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/snafu-0.7.5/src/once_bool.rs /home/extapalencia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/snafu-0.7.5/src/error_chain.rs /home/extapalencia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/snafu-0.7.5/src/report.rs /home/extapalencia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/snafu-0.7.5/src/Snafu.md /home/extapalencia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/snafu-0.7.5/src/report.md /home/extapalencia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/snafu-0.7.5/src/../README.md
+
+/home/extapalencia/Secenly/target/debug/deps/libsnafu-d00362df0d2142bf.rmeta: /home/extapalencia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/snafu-0.7.5/src/lib.rs /home/extapalencia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/snafu-0.7.5/src/backtrace_shim.rs /home/extapalencia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/snafu-0.7.5/src/once_bool.rs /home/extapalencia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/snafu-0.7.5/src/error_chain.rs /home/extapalencia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/snafu-0.7.5/src/report.rs /home/extapalencia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/snafu-0.7.5/src/Snafu.md /home/extapalencia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/snafu-0.7.5/src/report.md /home/extapalencia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/snafu-0.7.5/src/../README.md
+
+/home/extapalencia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/snafu-0.7.5/src/lib.rs:
+/home/extapalencia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/snafu-0.7.5/src/backtrace_shim.rs:
+/home/extapalencia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/snafu-0.7.5/src/once_bool.rs:
+/home/extapalencia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/snafu-0.7.5/src/error_chain.rs:
+/home/extapalencia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/snafu-0.7.5/src/report.rs:
+/home/extapalencia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/snafu-0.7.5/src/Snafu.md:
+/home/extapalencia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/snafu-0.7.5/src/report.md:
+/home/extapalencia/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/snafu-0.7.5/src/../README.md:

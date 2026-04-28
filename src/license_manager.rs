@@ -1,10 +1,9 @@
-use crate::{director::Director, builder::Builder, license_builder::LicenseBuilder, license_asn1::LicenseAsn1, sign_data::SignedDataService};
+use crate::{director::Director, builder::Builder, license_builder::LicenseBuilder, encapsulate::EncapsulateService};
 
 use std::io::{self, Write};
-use rusqlite::{Connection, Result};
 use chrono::{DateTime, Duration, Local, Timelike, Utc};
-use std::fs::File;
-use std::path::Path;
+
+use rusqlite::{Connection, Result};
 
 // Comandos:
 // openssl asn1parse -inform DER -in licenses/license.der  ->  comprueba formato ASN.1
@@ -109,26 +108,8 @@ pub fn create_license() -> Result<()> {
     Director::construct_license(&mut license_builder, id, expiration, heartbeat, notes);
     let license = license_builder.build();
 
-    let license_asn1 = LicenseAsn1::from(&license);
+    EncapsulateService::encapsulate_license(license);
 
-    let der_bytes = rasn::der::encode(&license_asn1)
-        .expect("Error serializando License DER");
-
-    println!("{:?}", license);
-    println!("DER bytes: {:02x?}", der_bytes);
-    
-    write_license_der("licenses/license.der", &der_bytes)
-        .expect("Error escribiendo el archivo de licencia");
-
-    let signed_data = SignedDataService::signed_data(der_bytes);
-
-    Ok(())
-}
-
-pub fn write_license_der(path: &str, der_bytes: &[u8]) -> std::io::Result<()> {
-    let path = Path::new(path);
-    let mut file = File::create(path)?;
-    file.write_all(der_bytes)?;
     Ok(())
 }
 

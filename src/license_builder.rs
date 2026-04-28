@@ -1,5 +1,5 @@
-use crate::license::License;
-use crate::builder::Builder;
+use crate::{license::License, builder::Builder};
+
 use chrono::{DateTime, Utc};
 
 #[derive(Default)]

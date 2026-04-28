@@ -1,7 +1,7 @@
-use rasn::{AsnType, Decode, Encode};
-use rasn::types::GeneralizedTime;
 use crate::license::License;
-use rasn::types::{OctetString};
+
+use rasn::{AsnType, Decode, Encode};
+use rasn::types::{OctetString, GeneralizedTime};
 
 #[derive(AsnType, Encode, Decode, Debug)]
 pub struct LicenseAsn1 {

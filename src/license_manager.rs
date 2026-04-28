@@ -3,9 +3,6 @@ use crate::{director::Director, builder::Builder, license_builder::LicenseBuilde
 use std::io::{self, Write};
 use rusqlite::{Connection, Result};
 use chrono::{DateTime, Duration, Utc};
-use std::fs::File;
-use std::path::Path;
-
 
 pub fn connect_db() -> Result<Connection> {
     let conn = Connection::open("secenly.db")?;  
@@ -103,27 +100,12 @@ pub fn create_license() -> Result<()> {
     Director::construct_license(&mut license_builder, id, expiration, heartbeat, notes);
     let license = license_builder.build();
 
-    let license_asn1 = LicenseAsn1::from(&license);
-
-    let der_bytes = rasn::der::encode(&license_asn1)
-        .expect("Error serializando License DER");
     
-    write_license_der("licenses/license.der", &der_bytes)
-        .expect("Error escribiendo el archivo de licencia");
-
-
-    println!("{:?}", license);
-    println!("DER bytes: {:02x?}", der_bytes);
 
     Ok(())
 }
 
-pub fn write_license_der(path: &str, der_bytes: &[u8]) -> std::io::Result<()> {
-    let path = Path::new(path);
-    let mut file = File::create(path)?;
-    file.write_all(der_bytes)?;
-    Ok(())
-}
+
 
 pub fn delete_license() -> Result<()> {
     println!("Seleccione la licencia que desea eliminar");

@@ -2,7 +2,7 @@ use chrono::{DateTime, Utc};
 
 #[derive(Debug, Clone)]
 pub struct License {    
-    pub id: [u8; 64],
+    pub id: String,
     pub creation_date: DateTime<Utc>,
     pub expiration_date: DateTime<Utc>,
     pub last_use_date: DateTime<Utc>,
@@ -12,7 +12,7 @@ pub struct License {
 
 impl License {
     pub fn new(
-        id: [u8; 64],
+        id: String,
         creation_date: DateTime<Utc>,
         expiration_date: DateTime<Utc>,
         last_use_date: DateTime<Utc>,
@@ -29,12 +29,12 @@ impl License {
         }
     }
 
-    /*pub fn set_id(&mut self, id: [u8; 64]) {
+    /*pub fn set_id(&mut self, id: String) {
         self.id = id;
     }
 
 
-    pub fn get_id(&self) -> &[u8; 64] {
+    pub fn get_id(&self) -> &String {
         &self.id
     }
 

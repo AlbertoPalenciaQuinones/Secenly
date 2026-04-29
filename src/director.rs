@@ -7,7 +7,7 @@ impl Director {
     
     pub fn construct_license(
         builder: &mut impl Builder, 
-        id: [u8; 64],
+        id: String,
         expiration_date: DateTime<Utc>,
         heartbeat_interval: i32,
         notes: String,

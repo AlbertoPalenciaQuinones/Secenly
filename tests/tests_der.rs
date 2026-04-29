@@ -7,7 +7,7 @@ use secenly::director::Director;
 use secenly::builder::Builder;
 use secenly::license_asn1::LicenseAsn1;
 
-mod tests_it2 {
+mod tests_it3 {
     use super::*;
 
     /* Test para verificar que la codificación DER de la licencia preserva los datos,

@@ -1,10 +1,15 @@
 #[cfg(test)]
 
+use chrono::{Duration, Utc};
+
 use secenly::license_asn1::LicenseAsn1;
 use secenly::license_manager::obtain_hwid;
 use secenly::license_id_generator::LicenseIdGenerator;
+use secenly::license_builder::LicenseBuilder;
+use secenly::director::Director;
+use secenly::builder::Builder;
 
-mod tests_it2 {
+mod tests_it3 {
     use super::*;
 
     /* Test para verificar que el ID de la licencia es una cadena de 
@@ -33,5 +38,62 @@ mod tests_it2 {
         };
 
         assert_eq!(license.id.len(), 128);
+    }
+
+    /* Test para verificar que al generar una licencia y pasarla
+       a formato ASN.1, los campos no están vacíos */
+    #[test]
+    fn asn1_license_fields_not_empty() {
+        let mut license_builder = LicenseBuilder::default();
+        Director::construct_license(&mut license_builder, String::from("f9b119a6d580c6040c1b7d8635b2b2fcb221c1f07d8977c8122e7e4b3527f0724cdb7c86049b2a84684bc401228558ad1e8aec4c8e7887e701425c31ab4d8077"), Utc::now() + Duration::days(30), 60, "Test license".to_string());
+        let license = license_builder.build();
+
+        let asn1 = LicenseAsn1::from(&license);
+
+        // ID
+        assert_eq!(!asn1.id.is_empty(), true);
+       
+       // Creation date
+        assert_eq!(asn1.creation_date.to_string().is_empty(), false);
+
+        // Expiration date
+        assert_eq!(asn1.expiration_date.to_string().is_empty(), false);
+
+        // Last use date
+        assert_eq!(asn1.last_use_date.to_string().is_empty(), false);
+
+        // Heartbeat interval
+        assert_eq!(asn1.heartbeat_interval > 0, true);
+
+        // Notes
+        assert_eq!(!asn1.notes.is_empty(), true);
+    }
+
+    #[test]
+    fn license_raw_to_asn1_correct_mapping() {
+        let id = String::from("f9b119a6d580c6040c1b7d8635b2b2fcb221c1f07d8977c8122e7e4b3527f0724cdb7c86049b2a84684bc401228558ad1e8aec4c8e7887e701425c31ab4d8077");
+
+        let mut license_builder = LicenseBuilder::default();
+        Director::construct_license(&mut license_builder, id, Utc::now() + Duration::days(30), 60, "roundtrip".to_string());
+        let license = license_builder.build();
+        let asn1 = LicenseAsn1::from(&license);
+
+        // ID
+        assert_eq!(asn1.id, license.id);
+        
+        // Creation date
+        assert_eq!(asn1.creation_date, license.creation_date);
+
+        // Expiration date
+        assert_eq!(asn1.expiration_date, license.expiration_date);
+
+        // Last use date
+        assert_eq!(asn1.last_use_date, license.last_use_date);
+
+        // Heartbeat interval
+        assert_eq!(asn1.heartbeat_interval, license.heartbeat_interval);
+
+        // Notes
+        assert_eq!(asn1.notes, license.notes);
     }
 }

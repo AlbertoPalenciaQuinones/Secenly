@@ -1,10 +1,7 @@
 use chrono::{DateTime, Utc};
-use rasn::{AsnType, Encode, Decode};
-use std::fmt;
 
-#[derive(AsnType, Encode, Decode, Debug)]
-pub struct License {
-    
+#[derive(Debug, Clone)]
+pub struct License {    
     pub id: [u8; 64],
     pub creation_date: DateTime<Utc>,
     pub expiration_date: DateTime<Utc>,
@@ -32,7 +29,7 @@ impl License {
         }
     }
 
-    pub fn set_id(&mut self, id: [u8; 64]) {
+    /*pub fn set_id(&mut self, id: [u8; 64]) {
         self.id = id;
     }
 
@@ -79,9 +76,5 @@ impl License {
 
     pub fn get_notes(&self) -> &String {
         &self.notes
-    }
-
-    pub fn is_expired(&self, current_date: &DateTime<Utc>) -> bool {
-        true
-    }
+    }*/
 }

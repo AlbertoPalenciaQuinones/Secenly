@@ -7,17 +7,16 @@ use std::io::{self, Write};
 //https://doc.rust-lang.org/stable/style-guide/items.html
 
 fn show_menu() {
-    println!("==================================");
-    println!(" Bienvenido al gestor de licencias");
-    println!("==================================\n");
-
-    println!("Seleccione una opción:");
-    println!("1. Crear licencia");
-    println!("2. Eliminar licencia");
-    println!("3. Modificar licencia");
-    println!("4. Listar licencias");
-    println!("5. Leer licencia desde archivo");
-    println!("0. Salir");
+    println!("=====================================================================");
+    println!("======================== WELCOME TO SECENLY! ========================");
+    println!("=====================================================================\n");
+    println!("Select an option:");
+    println!("1. Generate a new license");
+    println!("2. Delete an existing license");
+    println!("3. Modify a license");
+    println!("4. List all licenses");
+    println!("5. Read an existing license from an archive");
+    println!("0. Exit");
 }
 
 pub fn run() {

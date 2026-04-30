@@ -3,7 +3,7 @@ use chrono::{DateTime, Utc};
 pub trait Builder {
     type OutputType;
 
-    fn set_id(&mut self, id: [u8; 64]);
+    fn set_id(&mut self, id: String);
     fn set_creation_date(&mut self, creation_date: DateTime<Utc>);
     fn set_expiration_date(&mut self, expiration_date: DateTime<Utc>);
     fn set_last_use_date(&mut self, last_use_date: DateTime<Utc>);

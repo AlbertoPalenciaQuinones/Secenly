@@ -23,9 +23,6 @@ impl EncapsulateService {
 
         let der_bytes = rasn::der::encode(&license_asn1)
             .expect("Error serializando License DER");
-
-        println!("{:?}", license);
-        println!("DER bytes: {:02x?}", der_bytes);
         
         Self::write_license_der("licenses/license.der", &der_bytes)
             .expect("Error escribiendo el archivo de licencia");
@@ -63,7 +60,6 @@ impl EncapsulateService {
 
         let der: Vec<u8> = cms.to_der()?;
 
-        println!("CMS SignedData DER: {:02x?}", der);
         Ok(der)
     }
 }

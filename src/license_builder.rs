@@ -4,7 +4,7 @@ use chrono::{DateTime, Utc};
 
 #[derive(Default)]
 pub struct LicenseBuilder {
-    id: Option<[u8; 64]>,
+    id: Option<String>,
     creation_date: Option<DateTime<Utc>>,
     expiration_date: Option<DateTime<Utc>>,
     last_use_date: Option<DateTime<Utc>>,
@@ -15,7 +15,7 @@ pub struct LicenseBuilder {
 impl Builder for LicenseBuilder {
     type OutputType = License;
 
-    fn set_id(&mut self, id: [u8; 64]) {
+    fn set_id(&mut self, id: String) {
         self.id = Some(id);
     }
 

@@ -1,21 +1,41 @@
 use chrono::{DateTime, Utc};
 
+// Permite imprimir licencias en logs y depurar tests. Se utiliza la clonación
+// en algunos tests.
 #[derive(Debug, Clone)]
+
+// Representa una licencia de software completamente construida.
 pub struct License {    
-    pub id: [u8; 64],
+    pub id: String,
     pub creation_date: DateTime<Utc>,
     pub expiration_date: DateTime<Utc>,
-    pub last_use_date: DateTime<Utc>,
     pub heartbeat_interval: i32,
     pub notes: String,
 }
 
+/**
+ * El objeto de la licencia.
+ *
+ * Este objeto puede ser modificado por cualquiera que utilice la herramienta, 
+ * añadiendo o eliminando los atributos que quiera,
+ * 
+ * Debe saber que puede añadir nuevos atributos a la licencia, supone que
+ * también se haga en la biblioteca Secenly, siempre y cuando se haya optado
+ * utilizarla a la hora de validar licencias,
+ * 
+ * Es obligatorio seguir coherencia con la herramienta de generación de 
+ * licencias y la biblioteca, ya que ambos deben manejar los mismos atributos.
+ * 
+ * En cuanto a la generación de licencia, se utiliza el patrón builder para
+ * facilitar a quien quiera modificar los atributos realizar dicho cambio. Debe
+ * saber que si modifica la estructura de la Licencia, tendrá que modificar las
+ * clases que corresponden al patrón: director, builder y license_builder.
+ */
 impl License {
     pub fn new(
-        id: [u8; 64],
+        id: String,
         creation_date: DateTime<Utc>,
         expiration_date: DateTime<Utc>,
-        last_use_date: DateTime<Utc>,
         heartbeat_interval: i32,
         notes: String, 
     ) -> License {
@@ -23,18 +43,17 @@ impl License {
             id,
             creation_date,
             expiration_date,
-            last_use_date: last_use_date,
             heartbeat_interval: heartbeat_interval,
             notes,
         }
     }
 
-    /*pub fn set_id(&mut self, id: [u8; 64]) {
+    /*pub fn set_id(&mut self, id: String) {
         self.id = id;
     }
 
 
-    pub fn get_id(&self) -> &[u8; 64] {
+    pub fn get_id(&self) -> &String {
         &self.id
     }
 

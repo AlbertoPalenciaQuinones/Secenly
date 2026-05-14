@@ -1,11 +1,11 @@
 #[cfg(test)]
 
 use chrono::{Duration, Utc};
+use std::path::PathBuf;
 
-use secenly::builder::license_builder::LicenseBuilder;
-use secenly::builder::director::Director;
-use secenly::builder::builder::Builder;
+use secenly::builder::{builder::Builder, director::Director, license_builder::LicenseBuilder};
 use secenly::domain::license_asn1::LicenseAsn1;
+use secenly::services::{hardware_manager::HardwareManager, license_manager::LicenseManager, product_manager::ProductManager};
 
 mod tests_it3 {
     use super::*;
@@ -17,8 +17,15 @@ mod tests_it3 {
        anteriormente de 128 caracteres */
     #[test]
     fn der_roundtrip_preserves_data() {
+        let license_manager = setup_license_manager();
+
         let mut license_builder = LicenseBuilder::default();
-        Director::construct_license(&mut license_builder, String::from("f9b119a6d580c6040c1b7d8635b2b2fcb221c1f07d8977c8122e7e4b3527f0724cdb7c86049b2a84684bc401228558ad1e8aec4c8e7887e701425c31ab4d8077"), Utc::now() + Duration::days(30), 60, "roundtrip".to_string());
+        Director::construct_license(&mut license_builder, 
+            license_manager.get_license_id().to_string(), 
+            Utc::now() + Duration::days(30), 
+            60, 
+            "roundtrip".to_string());
+
         let license = license_builder.build();
 
         let asn1 = LicenseAsn1::from(&license);
@@ -35,10 +42,15 @@ mod tests_it3 {
        en todos los bytes, entonces, es determinista */
     #[test]
     fn der_is_deterministic() {
-        let id = String::from("f9b119a6d580c6040c1b7d8635b2b2fcb221c1f07d8977c8122e7e4b3527f0724cdb7c86049b2a84684bc401228558ad1e8aec4c8e7887e701425c31ab4d8077");
+        let license_manager = setup_license_manager();
 
         let mut license_builder = LicenseBuilder::default();
-        Director::construct_license(&mut license_builder, id, Utc::now() + Duration::days(30), 60, "roundtrip".to_string());
+        Director::construct_license(&mut license_builder, 
+            license_manager.get_license_id().to_string(), 
+            Utc::now() + Duration::days(30), 
+            60, 
+            "roundtrip".to_string());
+
         let license1 = license_builder.build();
 
         let license2 = license1.clone();
@@ -48,4 +60,20 @@ mod tests_it3 {
 
         assert_eq!(der1, der2);
     }
+}
+
+// Función para establecer el objeto license_manager y evitar repeticiones
+fn setup_license_manager() -> LicenseManager {
+    let seed_path: PathBuf = "example/seed.dat".into();
+
+    let hardware_manager = HardwareManager::new().expect("ERROR");
+
+    let product_manager = ProductManager::new(&seed_path, 
+        hardware_manager.get_hardware_id())
+        .expect("ERROR");
+
+    let license_manager = LicenseManager::new(product_manager.get_product_id())
+        .expect("ERROR");
+
+    license_manager
 }

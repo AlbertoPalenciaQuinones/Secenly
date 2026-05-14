@@ -1,3 +1,5 @@
+use crate::domain::license_asn1::LicenseAsn1;
+
 use chrono::{DateTime, Utc};
 
 // Permite imprimir licencias en logs y depurar tests. Se utiliza la clonación
@@ -28,7 +30,7 @@ pub struct License {
  * 
  * En cuanto a la generación de licencia, se utiliza el patrón builder para
  * facilitar a quien quiera modificar los atributos realizar dicho cambio. Debe
- * saber que si modifica la estructura de la Licencia, tendrá que modificar las
+ * saber que si modifica la estructura de la licencia, tendrá que modificar las
  * clases que corresponden al patrón: director, builder y license_builder.
  */
 impl License {
@@ -97,3 +99,16 @@ impl License {
         &self.notes
     }*/
 }
+
+impl From<LicenseAsn1> for License {
+    fn from(asn1: LicenseAsn1) -> Self {
+        License {
+            id: asn1.id.to_string(),
+            creation_date: asn1.creation_date.into(),
+            expiration_date: asn1.expiration_date.into(),
+            heartbeat_interval: asn1.heartbeat_interval,
+            notes: asn1.notes.to_string(),
+        }
+    }
+}
+

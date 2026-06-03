@@ -10,7 +10,7 @@ mod tests_it2 {
     use super::*;
 
     /* Test para verificar que las fechas de la licencia son correctas.
-       Se verifica que la fecha de expiración sea mayor a la fecha de creación */
+       Se verifica que la fecha de expiración sea mayor a la fecha de creación. */
     #[test]
     fn builds_valid_license() {
         let expiration = Utc::now() + Duration::days(30);
@@ -31,7 +31,12 @@ mod tests_it2 {
         let before = Utc::now();
 
         let mut license_builder = LicenseBuilder::default();
-        Director::construct_license(&mut license_builder, String::from("f9b119a6d580c6040c1b7d8635b2b2fcb221c1f07d8977c8122e7e4b3527f0724cdb7c86049b2a84684bc401228558ad1e8aec4c8e7887e701425c31ab4d8077"), before + Duration::days(30), 10, "Tests license".to_string());
+        Director::construct_license(&mut license_builder, 
+            String::from("TEST ID"), 
+            before + Duration::days(30), 
+            10, 
+            "Tests license".to_string());
+        
         let license = license_builder.build();
 
         let after = Utc::now();
@@ -41,7 +46,10 @@ mod tests_it2 {
         assert!(license.creation_date <= after + Duration::seconds(1));
     }
 
-    /* Test para verificar que las licencias manejan notas largas correctamente */
+    /* Test para verificar que el sistema es capaz de manejar correctamente
+       notas de gran tamaño en una licencia. Se genera una cadena extensa y
+       se asigna como campo de notas, comprobando posteriormente que el valor
+       se mantiene íntegro tras la construcción de la licencia. */
     #[test]
     fn handles_large_notes() {
         let large_notes = "A".repeat(1000);
@@ -61,8 +69,10 @@ mod tests_it2 {
         assert_eq!(license.notes, large_notes);
     }
 
-    /* Test para verificar que el constructor de licencias produce licencias válidas,
-       es decir, que el patrón builder funcione correctamente */
+    /* Test para verificar que el patrón de diseño Builder utilizado en la
+       construcción de licencias produce objetos válidos. Se crea una licencia
+       mediante el Director y el LicenseBuilder, comprobando que al menos uno
+       de sus campos principales (el identificador) contiene un valor válido. */
     #[test]
     fn builder_produces_valid_license() {
         let mut builder = LicenseBuilder::default();

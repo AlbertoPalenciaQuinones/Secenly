@@ -1,13 +1,13 @@
-use crate::domain::LicenseError;
+use crate::exceptions::LicenseError;
 
 use openssl::hash::{hash, MessageDigest};
 
-pub struct LicenseIdentifier {
-    pub license_id: String,
+pub struct LicenseManager {
+    pub license_id: String
 }
 
 // Lógica utilizada para generar el identificador de la licencia
-impl LicenseIdentifier {
+impl LicenseManager {
     /**
      * Genera el identificador de la licencia a partir del identificador de producto.
      *
@@ -30,13 +30,14 @@ impl LicenseIdentifier {
      * modificación en la biblioteca de Secenly siempre y cuando se opte por
      * utilizarla a la hora de validar licencias en el software propietario.
      */
-    pub fn initialize(product_id: &String) -> Result<Self, LicenseError> {
+    pub fn new(product_id: &String) -> Result<Self, LicenseError> {
         // Objeto que se devolverá como resultado al llamar al constructor
         let mut obj = Self {
-            license_id : String::new(),
+            license_id : String::new()
         };
 
-        let length = product_id.len();
+        let bytes = product_id.as_bytes();
+        let length = bytes.len();
         // Vector para almacenar los hashes por fragmentos
         let mut hashes: Vec<Vec<u8>> = Vec::new();
 
@@ -44,7 +45,8 @@ impl LicenseIdentifier {
         for i in 0..4 {
             let start = i * length / 4;
             let end = (i + 1) * length / 4;
-            let fragment = &product_id[start..end];
+            
+            let fragment = &bytes[start..end];
 
             // Generación y almacenamiento del hash
             let hash = Self::hash(fragment)?;
@@ -66,9 +68,12 @@ impl LicenseIdentifier {
     }
 
     // Generación del hash de los fragmentos del identificador de producto
-    fn hash(fragment: &str) -> Result<Vec<u8>, LicenseError> {
-        let digest = hash(MessageDigest::sha512(),  
-                                    fragment.as_bytes())?;
+    fn hash(fragment: &[u8]) -> Result<Vec<u8>, LicenseError> {
+        let digest = hash(MessageDigest::sha512(), fragment).map_err(|e| LicenseError::InvalidPrivateKey {
+            msg: "Something wrong ocurred calculating hash".into(),
+            source: Some(e),
+        })?;
+
         Ok(digest.to_vec())
     }
 
@@ -80,7 +85,7 @@ impl LicenseIdentifier {
             .collect()
     }
 
-    pub fn get_license_id(&self) -> String {
-        self.license_id.clone()
+    pub fn get_license_id(&self) -> &String {
+        &self.license_id
     }
 }

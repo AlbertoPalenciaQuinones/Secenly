@@ -55,3 +55,29 @@ pub fn ask_option<T>(prompt: &str, parser: impl Fn(u32) -> Option<T>) -> T {
         println!("[ERROR] Invalid option, try again.");
     }
 }
+
+pub fn ask_string(prompt: &str) -> String {
+    let mut input = String::new();
+
+    print!("{}", prompt);
+    io::stdout().flush().unwrap(); // fuerza a mostrar el prompt
+
+    io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read input");
+
+    input.trim().to_string()
+}
+
+pub fn ask_i32(prompt: &str) -> i32 {
+    loop {
+        let input = ask_string(prompt);
+
+        match input.parse::<i32>() {
+            Ok(value) => return value,
+            Err(_) => println!("Invalid number, try again."),
+        }
+    }
+}
+
+

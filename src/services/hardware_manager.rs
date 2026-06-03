@@ -1,11 +1,24 @@
 use std::process::Command;
 
-use crate::domain::LicenseError;
+use crate::exceptions::LicenseError;
 
-pub struct Hwid;
+pub struct HardwareManager {
+    pub hardware_id: String,
+}
 
 // Obtiene el identificador de hardware asignado al equipo
-impl Hwid {
+impl HardwareManager {
+    pub fn new() -> Result<Self, LicenseError> {
+        // Objeto que se devolverá como resultado al llamar al constructor
+        let mut obj = Self {
+            hardware_id : String::new(),
+        };
+
+        obj.hardware_id = Self::obtain_hwid()?;
+
+        Ok(obj)
+    }
+
     /**
      * Genera el identificador del hardware.
      *
@@ -19,7 +32,7 @@ impl Hwid {
      *     - Distinto comando para Linux y Windows
      * 
      * Debe saber que puede añadir distintos procedimientos escribiendo nuevas
-     * funciones, pero todas ellas deben funcionar de forma correcta para no
+     * funciones, todas ellas deben funcionar de forma correcta para no
      * romper el mecanismo de obtención del identificador.
      * 
      * Otro aspecto a tener en cuenta es que la modificación en la herramineta 
@@ -27,7 +40,7 @@ impl Hwid {
      * de su modificación en la biblioteca de Secenly, siempre y cuando se haya 
      * optado utilizarla a la hora de generar licencias de software.
      */
-    pub fn obtain_hwid() -> Result<String, LicenseError> {
+    fn obtain_hwid() -> Result<String, LicenseError> {
         let output = if cfg!(target_os = "linux") {
             Command::new("cat")
                 .arg("/etc/machine-id")
@@ -40,11 +53,35 @@ impl Hwid {
                 ])
                 .output()?
         } else {
-            panic!("[ERROR] SO not soported.");
+            return Err(LicenseError::HardwareError {
+                msg: "Unsupported operating system".into(),
+            });
         };
 
+        // Comprobar si el comando falló
+        if !output.status.success() {
+            return Err(LicenseError::HardwareError {
+                msg : String::from_utf8_lossy(&output.stderr).to_string(),
+            });
+        }
 
-        Ok(String::from_utf8_lossy(&output.stdout).trim().to_string())
+        // Extraer resultado
+        let hwid = String::from_utf8_lossy(&output.stdout)
+            .trim()
+            .to_string();
+
+        if hwid.is_empty() {
+            return Err(LicenseError::HardwareError {
+                msg : "Empty hardware ID".into()
+            });
+        }
+
+        Ok(hwid)
+
+    }
+
+    pub fn get_hardware_id(&self) -> String {
+        self.hardware_id.clone()
     }
 }
 

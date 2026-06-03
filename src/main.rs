@@ -1,11 +1,10 @@
-mod builder;
-mod domain;
-mod services;
-mod application;
-mod input;
+use secenly::application;
+use secenly::exceptions::LicenseError;
 
-fn main() {
-    application::run();
+fn main() -> Result<(), LicenseError> {
+    println!("\n\n\n\n=====================================================================");
+    println!("======================== WELCOME TO SECENLY! ========================");
+    println!("=====================================================================\n");
+    application::run()?;
+    Ok(())
 }
-
-

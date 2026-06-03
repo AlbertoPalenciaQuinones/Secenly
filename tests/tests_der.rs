@@ -64,7 +64,7 @@ mod tests_it3 {
 
 // Función para establecer el objeto license_manager y evitar repeticiones
 fn setup_license_manager() -> LicenseManager {
-    let seed_path: PathBuf = "example/seed.dat".into();
+    let seed_path: PathBuf = "tests/resources/seed.dat".into();
 
     let hardware_manager = HardwareManager::new().expect("ERROR");
 

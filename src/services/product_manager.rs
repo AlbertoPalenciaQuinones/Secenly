@@ -39,7 +39,7 @@ impl ProductManager {
         // Objeto que se devolverá como resultado al llamar al constructor
         let mut obj = Self {
             product_id: String::new(),
-            path: path.clone(),
+            path: path.clone().join("seed.dat"),
             seed: Vec::new(),
         };
 
@@ -67,7 +67,7 @@ impl ProductManager {
     // Creación del archivo de semilla aleatorio
     fn create_seed(&self) -> Result<(), LicenseError> {
         // Creación del archivo de semilla
-        let mut file = File::create(&self.path.join("seed.dat"))
+        let mut file = File::create(&self.path)
             .map_err(|e| LicenseError::IoWithContext {
                 source: e,
                 path: self.path.display().to_string()
